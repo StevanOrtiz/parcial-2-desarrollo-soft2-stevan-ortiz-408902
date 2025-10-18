@@ -1,0 +1,102 @@
+### Task Management API - Test Collection
+### Use with REST Client extension in VS Code
+### Or copy the curl commands below
+
+@baseUrl = http://localhost:3000/api
+
+### 1. Check API Root
+GET {{baseUrl}}
+
+### 2. Create Task #1
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Complete project documentation",
+  "description": "Write comprehensive README and API docs",
+  "dueDate": "2025-12-31T23:59:59Z"
+}
+
+### 3. Create Task #2 (without optional fields)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Review code architecture"
+}
+
+### 4. Create Task #3 (overdue task)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Fix critical bug",
+  "description": "This task is already overdue",
+  "dueDate": "2025-01-01T00:00:00Z"
+}
+
+### 5. List All Tasks
+GET {{baseUrl}}/tasks
+
+### 6. List Tasks by Status - PENDING
+GET {{baseUrl}}/tasks?status=PENDING
+
+### 7. List Tasks by Status - IN_PROGRESS
+GET {{baseUrl}}/tasks?status=IN_PROGRESS
+
+### 8. List Tasks by Status - DONE
+GET {{baseUrl}}/tasks?status=DONE
+
+### 9. Update Task Status to IN_PROGRESS (replace :id with actual task ID)
+PATCH {{baseUrl}}/tasks/1/status
+Content-Type: application/json
+
+{
+  "status": "IN_PROGRESS"
+}
+
+### 10. Update Task Status to DONE (replace :id with actual task ID)
+PATCH {{baseUrl}}/tasks/2/status
+Content-Type: application/json
+
+{
+  "status": "DONE"
+}
+
+### 11. List Overdue Tasks
+GET {{baseUrl}}/tasks/overdue
+
+### 12. Delete Task (replace :id with actual task ID)
+DELETE {{baseUrl}}/tasks/1
+
+### 13. Try to Get Deleted Task (should return 404)
+GET {{baseUrl}}/tasks
+
+### Error Cases
+
+### 14. Create Task without title (should fail)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "description": "Missing title field"
+}
+
+### 15. Update with invalid status (should fail)
+PATCH {{baseUrl}}/tasks/1/status
+Content-Type: application/json
+
+{
+  "status": "INVALID_STATUS"
+}
+
+### 16. Update non-existent task (should return 404)
+PATCH {{baseUrl}}/tasks/99999/status
+Content-Type: application/json
+
+{
+  "status": "DONE"
+}
+
+### 17. Delete non-existent task (should return 404)
+DELETE {{baseUrl}}/tasks/99999
